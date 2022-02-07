@@ -37,8 +37,8 @@ height:400px;
 <br>
 <h2>Contact us:-</h2>
 
-<h2>Polarapu Prasad</h2>
-<h2>+91-8383917484</h2>
+<h2>balu abcdefg</h2>
+<h2>+91-9010651040</h2>
 
 </div>
 </div>
