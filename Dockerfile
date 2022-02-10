@@ -1,3 +1,3 @@
-FROM tomcat:8
+FROM tomcat
 COPY target/*.war /usr/local/tomcat/webapps/myweb.war
 # testing webhook
