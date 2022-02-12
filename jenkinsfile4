@@ -6,9 +6,10 @@ node{
           def mvnHome = tool name: 'maven', type: 'maven'
           def mvnCMD = "${mvnHome}/bin/mvn"
           sh "${mvnCMD} clean package"
+          sh "mv target/*.war target/myweb.war"
         }
         stage("build docker image"){
-          sh 'docker build -t $JOB_NAME:v1.$BUILD_ID .'
+          sh 'docker build -t balu7632/myweb .'
           sh 'docker image tag $JOB_NAME:v1.$BUILD_ID balu7632/$JOB_NAME:v1.$BUILD_ID'
           sh 'docker image tag $JOB_NAME:v1.$BUILD_ID balu7632/$JOB_NAME:latest'
         }
