@@ -1,6 +1,6 @@
 node{
         stage("Git Checkout"){
-                git credentialsId: 'd65219b8-656f-4ad1-832b-dfd5e9ec5e11', url: 'https://github.com/balu7632/my-app.git'
+                git credentialsId: 'd65219b8-656f-4ad1-832b-dfd5e9ec5e11', url: 'https://github.com/balu7632/maven-project1.git'
         }
         stage("maven setup"){
           def mvnHome = tool name: 'maven', type: 'maven'
