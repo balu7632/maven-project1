@@ -1,0 +1,30 @@
+node{
+        stage("Git Checkout"){
+                git credentialsId: 'd65219b8-656f-4ad1-832b-dfd5e9ec5e11', url: 'https://github.com/balu7632/maven-project1.git'
+        }
+        stage("maven setup"){
+          def mvnHome = tool name: 'maven', type: 'maven'
+          def mvnCMD = "${mvnHome}/bin/mvn"
+          sh "${mvnCMD} clean package"
+          sh "mv target/*.war target/myweb.war"
+        }
+        stage("build docker image"){
+          sh 'docker image build -t $JOB_NAME:v1.$BUILD_ID .'
+          sh 'docker image tag $JOB_NAME:v1.$BUILD_ID balu7632/$JOB_NAME:v1.$BUILD_ID'
+          sh 'docker image tag $JOB_NAME:v1.$BUILD_ID balu7632/$JOB_NAME:latest'
+        }
+        stage('docker image push'){
+          withCredentials([string(credentialsId: 'docker-pwd', variable: 'DHPWD')]) {
+             sh "docker login -u balu7632 -p ${DHPWD}"
+          }
+          sh 'docker image push balu7632/$JOB_NAME:v1.$BUILD_ID'
+          sh 'docker image push balu7632/$JOB_NAME:latest'
+          sh 'docker image rm $JOB_NAME:v1.$BUILD_ID balu7632/$JOB_NAME:v1.$BUILD_ID balu7632/$JOB_NAME:latest'
+        }
+        stage("run container on dev server"){
+          def dockerRun = "docker run -itd -p 8081:8080 --name tomcat-1 balu7632/myweb"
+          sshagent(['tomcat-node-1']) {
+            sh "ssh -o StrictHostKeyChecking=no ec2-user@3.108.40.67 ${dockerRun}"       
+        }
+    }
+}
